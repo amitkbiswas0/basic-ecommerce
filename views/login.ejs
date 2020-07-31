@@ -1,0 +1,39 @@
+<%- include('includes/head.ejs') %>
+<link rel="stylesheet" href="/css/forms.css">
+<style>
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    width: 30rem;
+    height: 30rem;
+    text-align: center;
+    border: 2px solid black;
+    padding: 2rem;
+  }
+</style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Login Page</h1>
+    <form class="product-form" action="/login" method="POST">
+      <div class="form-control">
+        <label for="username">Enter Username: </label>
+        <input type="text" name="username" id="username">
+      </div>
+      <div class="form-control">
+        <label for="pass">Enter Password: </label>
+        <input type="password" name="pass" id="pass">
+      </div>
+      <div class="form-control">
+        <label for="admin"><input type="checkbox" name="admin" id="admin" value="true">Admin</label>
+      </div>
+      <button type="submit" class="btn">Log in</button>
+    </form>
+  </div>
+  <%- include('includes/end.ejs') %>
