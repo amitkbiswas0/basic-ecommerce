@@ -3,7 +3,7 @@ const router = express.Router();
 
 const adminController = require("../controllers/admin");
 
-// // /admin/products => GET
+// ADMIN HOMEPAGE /admin/products => GET
 router.get("/products", adminController.getProducts);
 
 // /admin/add-product => GET

@@ -1,7 +1,10 @@
-## To Test
-1. add your mongoDB Atlas info at /util/database.js
+## **To install into local system for testing :**
+
+1. Add your mongoDB Atlas info at /util/database.js
 2. Run the following commands for dependencies
-```js
+
+```bash
+npm install nodemon --save-dev
 npm install
 npm start
 ```

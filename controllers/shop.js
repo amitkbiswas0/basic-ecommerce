@@ -1,19 +1,17 @@
-const fs = require("fs");
-const path = require("path");
-const root = require("../util/path");
 const { isLoggedIn } = require("../util/session");
 
 const Product = require("../models/product");
 const User = require("../models/user");
 
+// show homepage
 exports.getHome = (req, res, next) => {
   isLoggedIn((user) => {
     if (user) {
-      Product.fetchAll()
+      Product.find()
         .then((products) => {
           res.render("shop/home", {
             prods: products,
-            pageTitle: "Shop Homepage",
+            pageTitle: "Homepage",
             path: "/shop",
             user: "user",
           });
@@ -22,14 +20,17 @@ exports.getHome = (req, res, next) => {
           console.log(err);
         });
     } else {
+      // logout if non-user tries to access route
       res.redirect("/");
     }
   });
 };
-exports.getProducts = (req, res, next) => {
+
+// show products page
+exports.getAllProducts = (req, res, next) => {
   isLoggedIn((user) => {
     if (user) {
-      Product.fetchAll()
+      Product.find()
         .then((products) => {
           res.render("shop/product-list", {
             prods: products,
@@ -42,14 +43,17 @@ exports.getProducts = (req, res, next) => {
           console.log(err);
         });
     } else {
+      // logout if non-user tries to access route
       res.redirect("/");
     }
   });
 };
+
+// show a single product
 exports.getProduct = (req, res, next) => {
   isLoggedIn((user) => {
     if (user) {
-      Product.findByID(req.params.productID)
+      Product.findById(req.params.productID)
         .then((product) => {
           res.render("shop/product-detail", {
             product: product,
@@ -60,100 +64,72 @@ exports.getProduct = (req, res, next) => {
         })
         .catch((err) => console.log(err));
     } else {
+      // logout if non-user tries to access route
       res.redirect("/");
     }
   });
 };
 
+// show cart items
 exports.getCart = (req, res, next) => {
   isLoggedIn(async (user) => {
     if (user) {
-      const items = [];
-      if (user.cart) {
-        for (let item of user.cart) {
-          items.push({
-            ...(await Product.findByID(item._id)),
-            quantity: item.quantity,
+      user
+        .populate("cart.items._id")
+        .execPopulate()
+        .then((user) => {
+          const items = [];
+          for (let item of user.cart.items) {
+            if (item._id) {
+              items.push(item);
+            }
+          }
+          res.render("shop/cart", {
+            products: items,
+            pageTitle: "Shopping Cart",
+            path: "/shop/cart",
+            user: "user",
           });
-        }
-      }
-      console.log(items);
-      res.render("shop/cart", {
-        products: items,
-        pageTitle: "Shopping Cart",
-        path: "/shop/cart",
-        user: "user",
-      });
+        });
     } else {
+      // logout if non-user tries to access route
       res.redirect("/");
     }
   });
 };
-exports.postCart = (req, res, next) => {
-  const file = path.join(root, "data", "sessions.txt");
-  fs.readFile(file, "utf-8", (err, userID) => {
-    if (err) throw "read error";
-    User.addToCart(userID, req.body.productID).then((err) => {
-      if (err) console.log(err);
-      res.redirect("/shop");
-    });
+
+// add to cart
+exports.postCartAddProduct = (req, res, next) => {
+  isLoggedIn((user) => {
+    if (user) {
+      user.addToCart(req.body.productID).then((product) => {
+        if (!product) console.log("Adding to Cart error!");
+        res.redirect("back");
+      });
+    } else {
+      // logout if non-user tries to access route
+      res.redirect("/");
+    }
   });
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
-  const file = path.join(root, "data", "sessions.txt");
-  fs.readFile(file, "utf-8", (err, userID) => {
-    if (err) throw "read error";
-    User.deleteFromCart(userID, req.body.productID).then((err) => {
-      if (!err) {
-        console.log("Item Deleted!");
-      } else {
-        console.log("Delete Error!");
-      }
-      res.redirect("/shop/cart");
-    });
+  isLoggedIn((user) => {
+    if (user) {
+      User.findByIdAndUpdate(
+        user._id,
+        {
+          $pull: { "cart.items": { _id: req.body.productID } },
+        },
+        (err) => {
+          if (!err) console.log("Item Deleted!");
+          else console.log("Delete error!");
+          res.redirect("/shop/cart");
+        }
+      );
+    } else {
+      // logout if non-user tries to access route
+      res.redirect("/");
+    }
   });
 };
-
-// exports.postOrder = (req, res, next) => {
-//   let fetchedCart;
-//   req.user
-//     .getCart()
-//     .then((cart) => {
-//       fetchedCart = cart;
-//       return cart.getProducts();
-//     })
-//     .then((products) => {
-//       return req.user
-//         .createOrder()
-//         .then((order) => {
-//           return order.addProducts(
-//             products.map((product) => {
-//               product.orderItem = { quantity: product.cartItem.quantity };
-//               return product;
-//             })
-//           );
-//         })
-//         .catch((err) => console.log(err));
-//     })
-//     .then((result) => {
-//       return fetchedCart.setProducts(null);
-//     })
-//     .then((result) => {
-//       res.redirect("/orders");
-//     })
-//     .catch((err) => console.log(err));
-// };
-
-// exports.getOrders = (req, res, next) => {
-//   req.user
-//     .getOrders({ include: ["products"] })
-//     .then((orders) => {
-//       res.render("shop/orders", {
-//         path: "/orders",
-//         pageTitle: "Your Orders",
-//         orders: orders,
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// };
