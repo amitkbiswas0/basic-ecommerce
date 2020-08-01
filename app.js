@@ -31,7 +31,7 @@ app.use(errorController.get404);
 
 // db connection ur, parameters
 const uri =
-  "mongodb+srv://username:password@clustername.g43sz.mongodb.net/dbname?retryWrites=true&w=majority";
+  "mongodb+srv://<username>:<password>@<clustername>.g43sz.mongodb.net/<dbname>?retryWrites=true&w=majority";
 const params = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
