@@ -18,7 +18,11 @@
             </li>
             <% } else { %>
             <li class="main-header__item">
-                <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Dashboard
+                <a class="<%= path === '/admin/dashboard' ? 'active' : '' %>" href="/admin/dashboard">Admin Dashboard
+                </a>
+            </li>
+            <li class="main-header__item">
+                <a class="<%= path === '/admin/users' ? 'active' : '' %>" href="/admin/users"> Users
                 </a>
             </li>
             <li class="main-header__item">
@@ -54,7 +58,11 @@
         </li>
         <% } else { %>
         <li class="mobile-nav__item">
-            <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Dashboard
+            <a class="<%= path === '/admin/dashboard' ? 'active' : '' %>" href="/admin/dashboard">Admin Dashboard
+            </a>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= path === '/admin/users' ? 'active' : '' %>" href="/admin/users"> Users
             </a>
         </li>
         <li class="mobile-nav__item">

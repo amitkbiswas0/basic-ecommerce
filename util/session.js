@@ -1,21 +1,21 @@
-const fs = require("fs");
-const path = require("path");
-const root = require("../util/path");
 const ObjectID = require("mongoose").Types.ObjectId;
 
 const User = require("../models/user");
+const Admin = require("../models/admin");
 
-exports.isLoggedIn = (cb) => {
-  const file = path.join(root, "data", "sessions.txt");
-  fs.readFile(file, "utf-8", (err, userID) => {
-    if (err) console.log("read error!");
+exports.isLoggedIn = (userSess, identity, cb) => {
+  if (!userSess) userSess = { _id: ObjectID() };
+  const userID = userSess._id;
 
-    if (ObjectID.isValid(userID) && String(new ObjectID(userID)) === userID) {
+  if (ObjectID.isValid(userID)) {
+    if (identity === "admin") {
+      Admin.findById(userID).then((admin) => {
+        cb(admin);
+      });
+    } else if (identity === "user") {
       User.findById(userID).then((user) => {
         cb(user);
       });
-    } else {
-      cb("");
     }
-  });
+  }
 };

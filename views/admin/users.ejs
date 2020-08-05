@@ -1,0 +1,40 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+
+    <main>
+        <% if (users.length > 0) { %>
+        <div class="grid">
+            <% for (let user of users) { %>
+            <article class="card product-item">
+                <header class="card__header">
+                    <h1 class="product__title">
+                        <%= user.username %>
+                    </h1>
+                </header>
+                <div class="card__content">
+                    <p class="product__description">
+                        <%= user.password %>
+                    </p>
+                    <p class="product__description">
+                        <%= user.email %>
+                    </p>
+                </div>
+                <div class="card__actions">
+                    <a href="/admin/edit-user/<%= user._id %>?edit=true" class="btn">Edit</a>
+                    <form action="/admin/delete-user" method="POST">
+                        <input type="hidden" value="<%= user._id %>" name="userID">
+                        <button class="btn" type="submit">Delete</button>
+                    </form>
+                </div>
+            </article>
+            <% } %>
+        </div>
+        <% } else { %>
+        <h1>No Users Found!</h1>
+        <% } %>
+    </main>
+    <%- include('../includes/end.ejs') %>

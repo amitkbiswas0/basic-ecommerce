@@ -1,44 +1,43 @@
-const fs = require("fs");
-const path = require("path");
-
-const root = require("../util/path");
 const User = require("../models/user");
+const Admin = require("../models/admin");
 
 // serve login page
 exports.getLogin = (req, res, next) => {
   res.render("login", {
     pageTitle: "Login Page",
-    path: "/login",
+    path: "/",
   });
 };
 
 // validate login
 exports.postLogin = (req, res, next) => {
-  User.find({ username: req.body.username, password: req.body.pass }).then(
-    (user) => {
-      if (user.length !== 0) {
-        // if validated store user to session
-        const file = path.join(root, "data", "sessions.txt");
-        fs.writeFile(file, user[0]._id.toString(), (err) => {
-          if (!err) {
-            if (req.body.admin) res.redirect("/admin/products");
-            else res.redirect("/shop");
-          } else console.log("session write error!");
-        });
-      } else res.redirect("/");
-    }
-  );
+  if (req.body.admin) {
+    Admin.find({ username: req.body.username, password: req.body.pass }).then(
+      (admin) => {
+        if (admin.length !== 0) {
+          req.session.userSess = admin[0]._id;
+          res.redirect("/admin/dashboard");
+        } else res.redirect("/");
+      }
+    );
+  } else if (req.body.user) {
+    User.find({ username: req.body.username, password: req.body.pass }).then(
+      (user) => {
+        if (user.length !== 0) {
+          req.session.userSess = user[0]._id;
+          res.redirect("/shop");
+        } else res.redirect("/");
+      }
+    );
+  } else {
+    res.redirect("/");
+  }
 };
 
 // logout user and clear session
 exports.getLogOut = (req, res, next) => {
-  const file = path.join(root, "data", "sessions.txt");
-  fs.writeFile(file, "no user session", (err) => {
-    if (!err) {
-      console.log("Logged out!");
-    } else {
-      console.log("session write error!");
-    }
+  req.session.destroy((err) => {
+    if (err) console.log(err);
     res.redirect("/");
   });
 };

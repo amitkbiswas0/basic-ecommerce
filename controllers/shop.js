@@ -5,7 +5,7 @@ const User = require("../models/user");
 
 // show homepage
 exports.getHome = (req, res, next) => {
-  isLoggedIn((user) => {
+  isLoggedIn(req.session.userSess, "user", (user) => {
     if (user) {
       Product.find()
         .then((products) => {
@@ -28,7 +28,7 @@ exports.getHome = (req, res, next) => {
 
 // show products page
 exports.getAllProducts = (req, res, next) => {
-  isLoggedIn((user) => {
+  isLoggedIn(req.session.userSess, "user", (user) => {
     if (user) {
       Product.find()
         .then((products) => {
@@ -51,7 +51,7 @@ exports.getAllProducts = (req, res, next) => {
 
 // show a single product
 exports.getProduct = (req, res, next) => {
-  isLoggedIn((user) => {
+  isLoggedIn(req.session.userSess, "user", (user) => {
     if (user) {
       Product.findById(req.params.productID)
         .then((product) => {
@@ -62,7 +62,9 @@ exports.getProduct = (req, res, next) => {
             user: "user",
           });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       // logout if non-user tries to access route
       res.redirect("/");
@@ -72,7 +74,7 @@ exports.getProduct = (req, res, next) => {
 
 // show cart items
 exports.getCart = (req, res, next) => {
-  isLoggedIn(async (user) => {
+  isLoggedIn(req.session.userSess, "user", async (user) => {
     if (user) {
       user
         .populate("cart.items._id")
@@ -100,7 +102,7 @@ exports.getCart = (req, res, next) => {
 
 // add to cart
 exports.postCartAddProduct = (req, res, next) => {
-  isLoggedIn((user) => {
+  isLoggedIn(req.session.userSess, "user", (user) => {
     if (user) {
       user.addToCart(req.body.productID).then((product) => {
         if (!product) console.log("Adding to Cart error!");
@@ -114,7 +116,7 @@ exports.postCartAddProduct = (req, res, next) => {
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
-  isLoggedIn((user) => {
+  isLoggedIn(req.session.userSess, "user", (user) => {
     if (user) {
       User.findByIdAndUpdate(
         user._id,

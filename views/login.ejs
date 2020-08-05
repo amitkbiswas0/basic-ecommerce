@@ -15,6 +15,19 @@
     border: 2px solid black;
     padding: 2rem;
   }
+
+  .choose {
+    width: 100%;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .lb {
+    margin-right: 2rem;
+  }
 </style>
 </head>
 
@@ -30,8 +43,11 @@
         <label for="pass">Enter Password: </label>
         <input type="password" name="pass" id="pass">
       </div>
-      <div class="form-control">
-        <label for="admin"><input type="checkbox" name="admin" id="admin" value="true" />Admin</label>
+      <div class="choose">
+        <input type="checkbox" name="user" id="user" value="true" />
+        <label for="user" class="lb">User</label>
+        <input type="checkbox" name="admin" id="admin" value="true" />
+        <label for="admin">Admin</label>
       </div>
       <button type="submit" class="btn">Log in</button>
     </form>
