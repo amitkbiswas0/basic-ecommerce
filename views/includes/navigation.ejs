@@ -5,18 +5,15 @@
         <ul class="main-header__item-list">
             <% if(user === "user") {%>
             <li class="main-header__item">
-                <a class="<%= path === '/shop' ? 'active' : '' %>" href="/shop">Shop</a>
+                <a class="<%= path === '/shop' ? 'active' : '' %>" href="/">Shop</a>
             </li>
             <li class="main-header__item">
-                <a class="<%= path === '/shop/products' ? 'active' : '' %>" href="/shop/products">Products</a>
+                <a class="<%= path === '/shop/cart' ? 'active' : '' %>" href="/user/cart">Cart</a>
             </li>
             <li class="main-header__item">
-                <a class="<%= path === '/shop/cart' ? 'active' : '' %>" href="/shop/cart">Cart</a>
+                <a href="/login/logout">Logout</a>
             </li>
-            <li class="main-header__item">
-                <a href="/logout">Logout</a>
-            </li>
-            <% } else { %>
+            <% } else if(user === "admin") { %>
             <li class="main-header__item">
                 <a class="<%= path === '/admin/dashboard' ? 'active' : '' %>" href="/admin/dashboard">Admin Dashboard
                 </a>
@@ -34,7 +31,11 @@
                 </a>
             </li>
             <li class="main-header__item">
-                <a href="/logout">Logout</a>
+                <a href="/login/logout">Logout</a>
+            </li>
+            <% } else {%>
+            <li class="main-header__item">
+                <a href="/login">Login</a>
             </li>
             <% } %>
         </ul>
@@ -45,18 +46,15 @@
     <ul class="mobile-nav__item-list">
         <% if(user === "user") {%>
         <li class="mobile-nav__item">
-            <a class="<%= path === '/shop' ? 'active' : '' %>" href="/shop">Shop</a>
+            <a class="<%= path === '/shop' ? 'active' : '' %>" href="/">Shop</a>
         </li>
         <li class="mobile-nav__item">
-            <a class="<%= path === '/shop/products' ? 'active' : '' %>" href="/shop/products">Products</a>
+            <a class="<%= path === '/shop/cart' ? 'active' : '' %>" href="/user/cart">Cart</a>
         </li>
         <li class="mobile-nav__item">
-            <a class="<%= path === '/shop/cart' ? 'active' : '' %>" href="/shop/cart">Cart</a>
+            <a href="/login/logout">Logout</a>
         </li>
-        <li class="mobile-nav__item">
-            <a href="/logout">Logout</a>
-        </li>
-        <% } else { %>
+        <% } else if(user === "admin") { %>
         <li class="mobile-nav__item">
             <a class="<%= path === '/admin/dashboard' ? 'active' : '' %>" href="/admin/dashboard">Admin Dashboard
             </a>
@@ -74,7 +72,11 @@
             </a>
         </li>
         <li class="mobile-nav__item">
-            <a href="/logout">Logout</a>
+            <a href="/login/logout">Logout</a>
+        </li>
+        <% } else {%>
+        <li class="mobile-nav__item">
+            <a href="/login">Login</a>
         </li>
         <% } %>
     </ul>

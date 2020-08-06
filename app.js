@@ -45,10 +45,10 @@ app.use(
 );
 
 // routes
-app.use("/", loginOut);
-app.use("/admin", adminRoutes);
-app.use("/shop", shopRoutes);
+app.use("/", shopRoutes);
+app.use("/login", loginOut);
 app.use("/logout", loginOut);
+app.use("/admin", adminRoutes);
 
 // error route
 app.use(errorController.get404);

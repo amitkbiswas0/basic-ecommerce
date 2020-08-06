@@ -20,31 +20,18 @@ exports.getHome = (req, res, next) => {
           console.log(err);
         });
     } else {
-      // logout if non-user tries to access route
-      res.redirect("/");
-    }
-  });
-};
-
-// show products page
-exports.getAllProducts = (req, res, next) => {
-  isLoggedIn(req.session.userSess, "user", (user) => {
-    if (user) {
+      // to homepage if non-user tries to access route
       Product.find()
         .then((products) => {
-          res.render("shop/product-list", {
+          res.render("shop/home", {
             prods: products,
-            pageTitle: "All Products",
-            path: "/shop/products",
-            user: "user",
+            pageTitle: "Homepage",
+            user: false,
           });
         })
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      // logout if non-user tries to access route
-      res.redirect("/");
     }
   });
 };
@@ -66,8 +53,19 @@ exports.getProduct = (req, res, next) => {
           console.log(err);
         });
     } else {
-      // logout if non-user tries to access route
-      res.redirect("/");
+      // to homepage if non-user tries to access route
+      Product.findById(req.params.productID)
+        .then((product) => {
+          res.render("shop/product-detail", {
+            product: product,
+            pageTitle: product.title,
+            path: "/shop/products",
+            user: false,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   });
 };
@@ -126,7 +124,7 @@ exports.postCartDeleteProduct = (req, res, next) => {
         (err) => {
           if (!err) console.log("Item Deleted!");
           else console.log("Delete error!");
-          res.redirect("/shop/cart");
+          res.redirect("/user/cart");
         }
       );
     } else {

@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const Product = require("../models/product");
 const User = require("../models/user");
 const { isLoggedIn } = require("../util/session");
@@ -64,12 +65,13 @@ exports.getAddUser = (req, res, next) => {
   });
 };
 exports.postAddUser = (req, res, next) => {
-  isLoggedIn(req.session.userSess, "admin", (admin) => {
+  isLoggedIn(req.session.userSess, "admin", async (admin) => {
+    const hashedPass = await bcrypt.hash(req.body.pass, 12);
     if (admin) {
       const user = new User({
         username: req.body.username,
         email: req.body.email,
-        password: req.body.pass,
+        password: hashedPass,
         cart: { items: [] },
       });
       // saving new user to db
@@ -114,10 +116,10 @@ exports.postEditUser = (req, res, next) => {
   isLoggedIn(req.session.userSess, "admin", (admin) => {
     if (admin) {
       User.findById(req.body.userID)
-        .then((user) => {
+        .then(async (user) => {
           user.username = req.body.username;
           user.email = req.body.email;
-          user.password = req.body.pass;
+          user.password = await bcrypt.hash(req.body.pass, 12);
           // saving updated product
           return user.save();
         })

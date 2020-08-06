@@ -21,10 +21,6 @@
     align-items: center;
   }
 
-  form .btn {
-    width: 50%;
-  }
-
   .container h1,
   form {
     width: 100%;
@@ -34,42 +30,27 @@
     width: 50%;
     margin-top: 2rem;
   }
-
-  .choose {
-    width: 100%;
-    height: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .lb {
-    margin-right: 2rem;
-  }
 </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>Login Page</h1>
-    <form class="product-form" action="/login" method="POST">
+    <h1>Sign-up Page</h1>
+    <form class="product-form" action="/login/signup" method="POST">
       <div class="form-control">
         <label for="username">Enter Username: </label>
         <input type="text" name="username" id="username">
       </div>
       <div class="form-control">
+        <label for="email">Enter Email: </label>
+        <input type="email" name="email" id="email">
+      </div>
+      <div class="form-control">
         <label for="pass">Enter Password: </label>
         <input type="password" name="pass" id="pass">
       </div>
-      <div class="choose">
-        <input type="checkbox" name="user" id="user" value="true" />
-        <label for="user" class="lb">User</label>
-        <input type="checkbox" name="admin" id="admin" value="true" />
-        <label for="admin">Admin</label>
-      </div>
-      <button type="submit" class="btn">Log in</button>
+      <button type="submit" class="btn">Sign up</button>
     </form>
-    <a class="btn" href="/login/signup">Sign up</a>
+    <a class="btn" href="/">Go Back to Login page</a>
   </div>
   <%- include('includes/end.ejs') %>
